@@ -1,4 +1,5 @@
 "use client"
+import { ROUTES } from "@/constants/routes"
 
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -23,6 +24,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { APP_CONFIG } from "@/constants"
 
 type ResetPasswordErrors = {
   password?: string
@@ -103,7 +105,7 @@ function ResetPasswordFormInner() {
       setIsSuccess(true)
 
       setTimeout(() => {
-        router.replace("/login")
+        router.replace(ROUTES.AUTH.LOGIN)
       }, 1200)
     } catch {
       setErrors({
@@ -125,7 +127,8 @@ function ResetPasswordFormInner() {
 
             <div>
               <p className="text-lg font-semibold tracking-tight">
-                AgentShefa
+              {APP_CONFIG.name}
+
               </p>
               <p className="text-sm text-slate-500">AI pharmacy system</p>
             </div>
@@ -149,7 +152,7 @@ function ResetPasswordFormInner() {
             <CardDescription>
               {isSuccess
                 ? "Your password has been reset. Redirecting to login..."
-                : "Choose a strong password for your AgentShefa account."}
+                : "Choose a strong password for your AgentRx account."}
             </CardDescription>
           </CardHeader>
 
@@ -166,7 +169,7 @@ function ResetPasswordFormInner() {
 
             {isSuccess ? (
               <Button asChild className="h-11 w-full rounded-xl">
-                <Link href="/login">Go to login</Link>
+                <Link href={ROUTES.AUTH.LOGIN}>Go to login</Link>
               </Button>
             ) : (
               <form className="space-y-5" onSubmit={handleSubmit} noValidate>
@@ -282,7 +285,7 @@ function ResetPasswordFormInner() {
                   variant="ghost"
                   className="h-11 w-full rounded-xl"
                 >
-                  <Link href="/forgot-password">Request a new link</Link>
+                  <Link href={ROUTES.AUTH.FORGOT_PASSWORD}>Request a new link</Link>
                 </Button>
               </form>
             )}

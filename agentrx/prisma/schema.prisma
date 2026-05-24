@@ -74,13 +74,51 @@ model Verification {
 }
 
 model Patient {
-  id          String    @id @default(cuid())
+  id String @id @default(cuid())
+
+  // Identity
   fullName    String
   dateOfBirth DateTime?
   phone       String?
   email       String?
-  notes       String?
 
+  // Address
+  addressLine1 String?
+  addressLine2 String?
+  city         String?
+  province     String  @default("ON")
+  postalCode   String?
+
+  // Ontario / coverage information
+  healthCardNumber  String?
+  healthCardVersion String?
+  insuranceProvider String?
+  drugPlanId        String?
+
+  // Pharmacy intake / clinical context
+  allergies          String?
+  medicalConditions  String?
+  currentMedications String?
+  preferredPharmacy  String?
+
+  // Prescriber / care team
+  primaryPhysicianName  String?
+  primaryPhysicianPhone String?
+
+  // Emergency contact / caregiver
+  emergencyContactName         String?
+  emergencyContactPhone        String?
+  emergencyContactRelationship String?
+
+  // Communication / consent
+  preferredContactMethod     PreferredContactMethod @default(PHONE)
+  consentToContact           Boolean                @default(false)
+  consentToCollectHealthInfo Boolean                @default(false)
+
+  // Internal pharmacy notes
+  notes String?
+
+  // Ownership / relations
   createdById String
   createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
 
@@ -88,6 +126,11 @@ model Patient {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+  @@index([fullName])
+  @@index([phone])
+  @@index([email])
 }
 
 model Medication {
@@ -151,4 +194,11 @@ enum PrescriptionStatus {
   READY
   COMPLETED
   CANCELLED
+}
+
+enum PreferredContactMethod {
+  PHONE
+  EMAIL
+  SMS
+  NONE
 }

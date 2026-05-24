@@ -23,9 +23,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { APP_CONFIG, APP_LIMITS, ROUTES } from "@/constants"
 
-const APP_NAME = "AgentShefa"
-const REQUEST_COOLDOWN_SECONDS = 20
 
 const forgotPasswordSchema = z.object({
   email: z
@@ -42,10 +41,10 @@ type ForgotPasswordStatus = "idle" | "submitting" | "success" | "error"
 
 function getResetRedirectUrl() {
   if (typeof window === "undefined") {
-    return "/reset-password"
+    return ROUTES.AUTH.RESET_PASSWORD
   }
 
-  return `${window.location.origin}/reset-password`
+  return `${window.location.origin}${ROUTES.AUTH.RESET_PASSWORD}`
 }
 
 function getPublicErrorMessage(message?: string) {
@@ -137,13 +136,13 @@ export function ForgotPasswordForm() {
       if (error) {
         setFormError(getPublicErrorMessage(error.message))
         setStatus("error")
-        setCooldown(REQUEST_COOLDOWN_SECONDS)
+        setCooldown(APP_LIMITS.passwordResetCooldownSeconds)
         return
       }
 
       setSubmittedEmail(parsed.data.email)
       setStatus("success")
-      setCooldown(REQUEST_COOLDOWN_SECONDS)
+      setCooldown(APP_LIMITS.passwordResetCooldownSeconds)
     } catch (error) {
       console.error("[forgot_password.request_failed]", {
         email: parsed.data.email,
@@ -152,7 +151,7 @@ export function ForgotPasswordForm() {
 
       setFormError("Something went wrong while sending the reset link.")
       setStatus("error")
-      setCooldown(REQUEST_COOLDOWN_SECONDS)
+      setCooldown(APP_LIMITS.passwordResetCooldownSeconds)
     }
   }
 
@@ -173,9 +172,9 @@ export function ForgotPasswordForm() {
       <div className="relative w-full max-w-md">
         <div className="mb-8 flex justify-center">
           <Link
-            href="/login"
+            href={ROUTES.AUTH.LOGIN}
             className="flex items-center gap-3 rounded-2xl px-3 py-2 transition hover:bg-white"
-            aria-label={`${APP_NAME} home`}
+            aria-label={`${APP_CONFIG.name} home`}
           >
             <div className="flex size-11 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-sm">
               <Pill className="size-5" aria-hidden="true" />
@@ -183,9 +182,9 @@ export function ForgotPasswordForm() {
 
             <div>
               <p className="text-lg font-semibold tracking-tight">
-                {APP_NAME}
+                {APP_CONFIG.name}
               </p>
-              <p className="text-sm text-slate-500">AI pharmacy system</p>
+              <p className="text-sm text-slate-500">{APP_CONFIG.tagline}</p>
             </div>
           </Link>
         </div>
@@ -243,7 +242,7 @@ export function ForgotPasswordForm() {
                   </div>
 
                   <Link
-                    href="/login"
+                   href={ROUTES.AUTH.LOGIN}
                     className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-slate-950 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
                   >
                     Back to login
@@ -320,7 +319,7 @@ export function ForgotPasswordForm() {
                       </p>
                     ) : (
                       <p className="text-xs leading-5 text-slate-500">
-                        Use the email associated with your {APP_NAME} account.
+                        Use the email associated with your {APP_CONFIG.name} account.
                       </p>
                     )}
                   </div>
@@ -346,7 +345,7 @@ export function ForgotPasswordForm() {
                   </Button>
 
                   <Link
-                    href="/login"
+                    href={ROUTES.AUTH.LOGIN}
                     className="inline-flex h-11 w-full items-center justify-center rounded-xl px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
                   >
                     <ArrowLeft className="mr-2 size-4" aria-hidden="true" />

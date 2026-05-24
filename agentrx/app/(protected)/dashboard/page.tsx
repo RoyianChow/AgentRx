@@ -1,9 +1,9 @@
 import { Bot, CalendarClock, ShieldCheck } from "lucide-react"
 
-import { AiReviewCard } from "@/components/dashboard/ai-review-card"
-import { PrescriptionQueue } from "@/components/dashboard/prescription-queue"
-import { RecentActivity } from "@/components/dashboard/recent-activity"
-import { StatsCards } from "@/components/dashboard/stats-cards"
+import { AiReviewCard } from "@/features/dashboard/components/ai-review-card"
+import { PrescriptionQueue } from "@/features/dashboard/components/prescription-queue"
+import { RecentActivity } from "@/features/dashboard/components/recent-activity"
+import { StatsCards } from "@/features/dashboard/components/stats-cards"
 import {
   Card,
   CardContent,
@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { getDashboardSummary } from "@/server/queries/user-queries"
+import { APP_CONFIG } from "@/constants"
 
 export default async function DashboardPage() {
   const summary = await getDashboardSummary()
@@ -90,7 +91,8 @@ export default async function DashboardPage() {
             <div className="rounded-2xl bg-white/10 p-4">
               <div className="mb-3 flex items-center gap-2">
                 <Bot className="size-4 text-emerald-300" />
-                <p className="text-sm font-medium">AgentShefa Assistant</p>
+                <p className="text-sm font-medium">                  {APP_CONFIG.name}
+                Assistant</p>
               </div>
 
               <p className="text-sm leading-6 text-slate-200">
@@ -102,7 +104,7 @@ export default async function DashboardPage() {
 
             <div className="flex gap-2">
               <Input
-                placeholder="Ask AgentShefa..."
+                placeholder="Ask AgentRx..."
                 className="rounded-xl border-white/20 bg-white/10 text-white placeholder:text-slate-400"
               />
               <Button className="rounded-xl bg-white text-slate-950 hover:bg-slate-100">

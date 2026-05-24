@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { APP_CONFIG } from "@/constants"
 
 export default function AssistantPage() {
   return (
@@ -17,7 +18,8 @@ export default function AssistantPage() {
         <CardHeader>
           <CardTitle>AI Assistant</CardTitle>
           <CardDescription>
-            AgentShefa assistant workspace. The Python agent service can be
+          {APP_CONFIG.name}
+          assistant workspace. The Python agent service can be
             connected here later.
           </CardDescription>
         </CardHeader>
@@ -27,7 +29,8 @@ export default function AssistantPage() {
             <div className="max-w-2xl rounded-2xl bg-slate-100 p-4">
               <div className="mb-2 flex items-center gap-2">
                 <Bot className="size-4 text-slate-700" />
-                <p className="text-sm font-medium">AgentShefa</p>
+                <p className="text-sm font-medium">                  {APP_CONFIG.name}
+                </p>
               </div>
 
               <p className="text-sm leading-6 text-slate-600">

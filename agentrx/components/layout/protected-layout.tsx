@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 
-import { DashboardHeader } from "@/components/dashboard/dashboard-header"
-import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar"
+import { DashboardHeader } from "@/features/dashboard/components/dashboard-header"
+import { DashboardSidebar } from "@/features/dashboard/components/dashboard-sidebar"
 import { requireUser } from "@/lib/require-user"
 
 export async function ProtectedLayout({ children }: { children: ReactNode }) {

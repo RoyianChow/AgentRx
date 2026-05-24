@@ -90,11 +90,11 @@ const defaultActivity: RecentActivityItem[] = [
     type: "ai_review",
     title: "AI review completed",
     description:
-      "AgentShefa checked a prescription workflow and queued it for pharmacist verification.",
+      "AgentRx checked a prescription workflow and queued it for pharmacist verification.",
     createdAt: new Date(),
     severity: "success",
     actor: {
-      name: "AgentShefa",
+      name: "AgentRx",
       role: "AI Assistant",
     },
   },

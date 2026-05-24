@@ -9,6 +9,7 @@ import { getInitials } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ROUTES } from "@/constants/routes"
 
 type DashboardHeaderProps = {
   user: {
@@ -29,7 +30,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
 
     try {
       await authClient.signOut()
-      router.replace("/login")
+      router.replace(ROUTES.AUTH.LOGIN)
       router.refresh()
     } finally {
       setIsSigningOut(false)

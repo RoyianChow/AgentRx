@@ -24,7 +24,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-
+import { APP_CONFIG, APP_LIMITS, ROUTES } from "@/constants"
 type LoginFormState = {
   email: string
   password: string
@@ -33,18 +33,16 @@ type LoginFormState = {
 
 type LoginErrors = Partial<Record<keyof LoginFormState | "root", string>>
 
-const DEFAULT_REDIRECT_PATH = "/dashboard"
-
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
 function sanitizeRedirectPath(value: string | null) {
-  if (!value) return DEFAULT_REDIRECT_PATH
+  if (!value) return ROUTES.DASHBOARD.ROOT
 
   // Prevent open redirects.
   if (!value.startsWith("/") || value.startsWith("//")) {
-    return DEFAULT_REDIRECT_PATH
+    return ROUTES.DASHBOARD.ROOT
   }
 
   return value
@@ -160,7 +158,7 @@ function LoginPageContent() {
 
               <div>
                 <p className="text-lg font-semibold tracking-tight">
-                  AgentShefa
+                  {APP_CONFIG.name}
                 </p>
                 <p className="text-sm text-slate-400">
                   AI pharmacy operating system
@@ -213,7 +211,7 @@ function LoginPageContent() {
 
                 <div>
                   <p className="text-lg font-semibold tracking-tight">
-                    AgentShefa
+                  {APP_CONFIG.name}
                   </p>
                   <p className="text-sm text-slate-500">
                     AI pharmacy system
@@ -296,7 +294,7 @@ function LoginPageContent() {
                       </label>
 
                       <Link
-                        href="/forgot-password"
+                        href={ROUTES.AUTH.FORGOT_PASSWORD}
                         className="text-sm font-medium text-slate-950 underline-offset-4 hover:underline"
                       >
                         Forgot password?

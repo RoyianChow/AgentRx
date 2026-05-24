@@ -7,8 +7,8 @@ import { env } from "@/env"
 
 const resend = new Resend(env.RESEND_API_KEY)
 
-const APP_NAME = "AgentShefa"
-const SUPPORT_EMAIL = "support@agentshefa.com"
+const APP_NAME = "AgentRx"
+const SUPPORT_EMAIL = "support@agentrx.com"
 
 const sendPasswordResetEmailSchema = z.object({
   to: z.string().email("A valid recipient email is required."),
@@ -225,7 +225,7 @@ export async function sendPasswordResetEmail(
         },
         {
           name: "app",
-          value: "agentshefa",
+          value: "agentrx",
         },
       ],
     })
