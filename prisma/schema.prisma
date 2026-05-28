@@ -1,0 +1,394 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  role          UserRole @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+  patients      Patient[]
+  agentMessages AgentMessage[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+model Patient {
+  id String @id @default(cuid())
+
+  // Identity
+  fullName    String
+  dateOfBirth DateTime?
+  phone       String?
+  email       String?
+
+  // Address
+  addressLine1 String?
+  addressLine2 String?
+  city         String?
+  province     String  @default("ON")
+  postalCode   String?
+
+  // Ontario / coverage information
+  healthCardNumber  String?
+  healthCardVersion String?
+  insuranceProvider String?
+  drugPlanId        String?
+
+  // Pharmacy intake / clinical context
+  allergies          String?
+  medicalConditions  String?
+  currentMedications String?
+  preferredPharmacy  String?
+
+  // Prescriber / care team
+  primaryPhysicianName  String?
+  primaryPhysicianPhone String?
+
+  // Emergency contact / caregiver
+  emergencyContactName         String?
+  emergencyContactPhone        String?
+  emergencyContactRelationship String?
+
+  // Communication / consent
+  preferredContactMethod     PreferredContactMethod @default(PHONE)
+  consentToContact           Boolean                @default(false)
+  consentToCollectHealthInfo Boolean                @default(false)
+
+  // Internal pharmacy notes
+  notes String?
+
+  // Ownership / relations
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  prescriptions Prescription[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+  @@index([fullName])
+  @@index([phone])
+  @@index([email])
+}
+
+enum DrugSchedule {
+  PRESCRIPTION
+  OTC
+  NAPRA_SCHEDULE_II
+  NAPRA_SCHEDULE_III
+  NARCOTIC
+  CONTROLLED_DRUG
+  TARGETED_SUBSTANCE
+  BIOLOGIC
+  UNKNOWN
+}
+
+enum MedicationStatus {
+  ACTIVE
+  DISCONTINUED
+  BACKORDERED
+  RECALLED
+  ON_HOLD
+}
+
+enum StorageRequirement {
+  ROOM_TEMPERATURE
+  REFRIGERATED
+  FROZEN
+  PROTECT_FROM_LIGHT
+  CONTROLLED_SUBSTANCE_LOCKED
+  OTHER
+}
+
+enum QuantityUnit {
+  TABLET
+  CAPSULE
+  ML
+  MG
+  G
+  PATCH
+  VIAL
+  INHALER
+  BOTTLE
+  PACKAGE
+  UNIT
+}
+
+enum PrescriptionOrigin {
+  PAPER
+  FAX
+  ERX
+  PHONE
+  TRANSFER
+  PHARMACIST_PRESCRIBED
+  OTHER
+}
+
+enum PrescriptionPriority {
+  ROUTINE
+  URGENT
+}
+
+model Medication {
+  id String @id @default(cuid())
+
+  din         String? @unique
+  name        String
+  brandName   String?
+  genericName String?
+
+  manufacturer String?
+  strength     String?
+  dosage       String?
+  form         String?
+  route        String?
+  description  String?
+
+  drugSchedule       DrugSchedule       @default(UNKNOWN)
+  status             MedicationStatus   @default(ACTIVE)
+  storageRequirement StorageRequirement @default(ROOM_TEMPERATURE)
+
+  stockQuantity   Decimal?     @default(0) @db.Decimal(12, 3)
+  reorderLevel    Decimal?     @db.Decimal(12, 3)
+  unitOfMeasure   QuantityUnit @default(UNIT)
+  storageLocation String?
+
+  lotNumber  String?
+  expiryDate DateTime?
+
+  isHighAlert           Boolean @default(false)
+  isLookAlikeSoundAlike Boolean @default(false)
+  requiresCounselling   Boolean @default(false)
+  requiresRefrigeration Boolean @default(false)
+  controlledSubstance   Boolean @default(false)
+
+  pharmacistNotes String?
+
+  prescriptions PrescriptionMedication[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([brandName])
+  @@index([genericName])
+  @@index([din])
+  @@index([drugSchedule])
+  @@index([status])
+}
+
+model Prescription {
+  id        String @id @default(cuid())
+  patientId String
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  status   PrescriptionStatus   @default(PENDING)
+  priority PrescriptionPriority @default(ROUTINE)
+  origin   PrescriptionOrigin   @default(OTHER)
+
+  /**
+   * Your uploaded prescription image/PDF.
+   * OCP expects scanned original prescriptions to be part of the patient record where applicable.
+   */
+  fileKey String?
+
+  /**
+   * Internal prescription/Rx number.
+   */
+  rxNumber String? @unique
+
+  /**
+   * Prescriber details.
+   * You can later normalize this into a Prescriber model.
+   */
+  prescriberName          String?
+  prescriberLicenseNumber String?
+  prescriberPhone         String?
+  prescriberFax           String?
+  prescriberAddress       String?
+
+  /**
+   * Prescription lifecycle dates.
+   */
+  issuedAt   DateTime?
+  receivedAt DateTime  @default(now())
+  expiresAt  DateTime?
+
+  /**
+   * If the prescription was verbal/phone/fax/transferred.
+   */
+  receivedByName    String?
+  transcribedByName String?
+
+  /**
+   * Clinical/admin documentation.
+   */
+  notes                   String?
+  pharmacistNotes         String?
+  drugRelatedProblems     String?
+  interventionNotes       String?
+  patientCounsellingNotes String?
+
+  medications PrescriptionMedication[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([patientId])
+  @@index([status])
+  @@index([rxNumber])
+  @@index([issuedAt])
+  @@index([receivedAt])
+}
+
+model PrescriptionMedication {
+  id             String @id @default(cuid())
+  prescriptionId String
+  medicationId   String
+
+  prescription Prescription @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+  medication   Medication   @relation(fields: [medicationId], references: [id], onDelete: Cascade)
+
+  /**
+   * Snapshot of the prescribed item.
+   * Keep these even if the Medication master record changes later.
+   */
+  prescribedDrugName String?
+  prescribedStrength String?
+  prescribedForm     String?
+  prescribedRoute    String?
+
+  /**
+   * Sig / directions.
+   */
+  instructions String?
+  dose         String?
+  frequency    String?
+  route        String?
+  duration     String?
+
+  /**
+   * Quantity/refill details.
+   */
+  quantity          Decimal?      @db.Decimal(12, 3)
+  quantityUnit      QuantityUnit?
+  daysSupply        Int?
+  refillsAuthorized Int?
+  refillsRemaining  Int?
+
+  /**
+   * Substitution / generic handling.
+   */
+  substitutionAllowed  Boolean @default(true)
+  noSubstitutionReason String?
+
+  /**
+   * Patient care context.
+   */
+  indication String?
+  startDate  DateTime?
+  endDate    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([prescriptionId])
+  @@index([medicationId])
+}
+
+model AgentMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+enum UserRole {
+  USER
+  PHARMACIST
+  ADMIN
+}
+
+enum PrescriptionStatus {
+  PENDING
+  IN_REVIEW
+  READY_TO_FILL
+  PARTIALLY_FILLED
+  FILLED
+  ON_HOLD
+  CANCELLED
+  EXPIRED
+  TRANSFERRED
+}
+
+enum PreferredContactMethod {
+  PHONE
+  EMAIL
+  SMS
+  NONE
+}
