@@ -1,5 +1,6 @@
 import Link from "next/link"
 import type { ReactNode } from "react"
+import { ContactForm } from "@/features/components/contact-form"
 import {
   ArrowRight,
   Bot,
@@ -590,7 +591,7 @@ export default function HomePage() {
             <div className="mt-8 space-y-4">
               <div className="flex items-center gap-3 text-slate-700">
                 <Mail className="h-5 w-5 text-emerald-600" />
-                <span className="font-medium">hello@agentrx.ai</span>
+                <span className="font-medium">ai.shefa.pharmacy.647@gmail.com</span>
               </div>
               <div className="flex items-center gap-3 text-slate-700">
                 <Building2 className="h-5 w-5 text-emerald-600" />
@@ -601,78 +602,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <form className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-2xl shadow-slate-200/80 sm:p-8">
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div>
-                <label className="text-sm font-semibold text-slate-700">
-                  Full name
-                </label>
-                <input
-                  type="text"
-                  placeholder="Your name"
-                  className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-950"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-semibold text-slate-700">
-                  Work email
-                </label>
-                <input
-                  type="email"
-                  placeholder="you@company.com"
-                  className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-950"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-semibold text-slate-700">
-                  Company
-                </label>
-                <input
-                  type="text"
-                  placeholder="Company name"
-                  className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-950"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-semibold text-slate-700">
-                  Interest
-                </label>
-                <select className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-950">
-                  <option>Book a demo</option>
-                  <option>Pharmacy pilot</option>
-                  <option>Partnership</option>
-                  <option>Investment conversation</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <label className="text-sm font-semibold text-slate-700">
-                Message
-              </label>
-              <textarea
-                placeholder="Tell us what you are interested in..."
-                rows={5}
-                className="mt-2 w-full resize-none rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-950"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800"
-            >
-              Request Intro
-              <ArrowRight className="h-4 w-4" />
-            </button>
-
-            <p className="mt-4 text-center text-xs leading-5 text-slate-500">
-              This form is ready for UI. Connect it to Resend, HubSpot,
-              Calendly, or your CRM when your backend route is ready.
-            </p>
-          </form>
+          <ContactForm />
         </div>
       </section>
 
