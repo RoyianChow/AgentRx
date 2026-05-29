@@ -6,9 +6,17 @@ import { db } from "@/lib/db"
 import { env } from "@/env"
 import { sendPasswordResetEmail } from "./email"
 
+const appUrl = env.BETTER_AUTH_URL
+
 export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
-  baseURL: env.BETTER_AUTH_URL,
+  baseURL: appUrl,
+
+  trustedOrigins: [
+    appUrl,
+    "http://localhost:3000",
+    "https://agentrx-zeta.vercel.app",
+  ],
 
   database: prismaAdapter(db, {
     provider: "postgresql",
@@ -20,15 +28,15 @@ export const auth = betterAuth({
     minPasswordLength: 8,
     resetPasswordTokenExpiresIn: 60 * 60,
     revokeSessionsOnPasswordReset: true,
-  
+
     sendResetPassword: async ({ user, url }) => {
-        await sendPasswordResetEmail({
-          to: user.email,
-          name: user.name,
-          resetUrl: url,
-        })
-      },
-  
+      await sendPasswordResetEmail({
+        to: user.email,
+        name: user.name,
+        resetUrl: url,
+      })
+    },
+
     onPasswordReset: async ({ user }) => {
       console.log(`Password reset completed for ${user.email}`)
     },

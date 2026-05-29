@@ -40,11 +40,15 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordStatus = "idle" | "submitting" | "success" | "error"
 
 function getResetRedirectUrl() {
-  if (typeof window === "undefined") {
-    return ROUTES.AUTH.RESET_PASSWORD
-  }
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
+    (typeof window !== "undefined" ? window.location.origin : "")
 
-  return `${window.location.origin}${ROUTES.AUTH.RESET_PASSWORD}`
+  const resetPath = ROUTES.AUTH.RESET_PASSWORD.startsWith("/")
+    ? ROUTES.AUTH.RESET_PASSWORD
+    : `/${ROUTES.AUTH.RESET_PASSWORD}`
+
+  return `${appUrl}${resetPath}`
 }
 
 function getPublicErrorMessage(message?: string) {
