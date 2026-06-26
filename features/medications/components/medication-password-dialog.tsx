@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Loader2, LockKeyhole } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -35,12 +35,14 @@ export function MedicationPasswordDialog({
   onConfirm,
 }: MedicationPasswordDialogProps) {
   const [password, setPassword] = useState("")
+  const [prevOpen, setPrevOpen] = useState(open)
 
-  useEffect(() => {
+  if (open !== prevOpen) {
+    setPrevOpen(open)
     if (!open) {
       setPassword("")
     }
-  }, [open])
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()

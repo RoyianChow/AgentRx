@@ -10,7 +10,6 @@ import {
   Loader2,
   LockKeyhole,
   Mail,
-  Pill,
   ShieldCheck,
 } from "lucide-react"
 import Image from "next/image"
@@ -26,7 +25,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { APP_CONFIG, APP_LIMITS, ROUTES } from "@/constants"
+import { APP_CONFIG, ROUTES } from "@/constants"
 type LoginFormState = {
   email: string
   password: string
@@ -43,6 +42,18 @@ function sanitizeRedirectPath(value: string | null) {
   if (!value) return ROUTES.DASHBOARD.ROOT
 
   // Prevent open redirects.
+  try {
+    if (typeof window !== "undefined") {
+      const url = new URL(value, window.location.origin)
+      if (url.origin !== window.location.origin) {
+        return ROUTES.DASHBOARD.ROOT
+      }
+    }
+  } catch {
+    // Fallback if URL parsing fails
+  }
+
+  // If it's a relative path, ensure it doesn't start with '//' (protocol-relative)
   if (!value.startsWith("/") || value.startsWith("//")) {
     return ROUTES.DASHBOARD.ROOT
   }
