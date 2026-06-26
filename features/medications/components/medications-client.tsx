@@ -106,9 +106,12 @@ export function MedicationsClient({
   const [medications, setMedications] =
     useState<MedicationRow[]>(initialMedications)
 
-  useEffect(() => {
+  // Sync state if initialMedications changes (e.g. after refresh)
+  const [prevInitialMedications, setPrevInitialMedications] = useState(initialMedications)
+  if (initialMedications !== prevInitialMedications) {
+    setPrevInitialMedications(initialMedications)
     setMedications(initialMedications)
-  }, [initialMedications])
+  }
 
   const stats = useMemo(() => {
     return {

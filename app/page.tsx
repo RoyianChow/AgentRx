@@ -1,6 +1,6 @@
 import Link from "next/link"
 import type { ReactNode } from "react"
-import { ContactForm } from "@/features/components/contact-form"
+import { ContactForm } from "@/features/landing/components/contact-form"
 import {
   ArrowRight,
   Bot,

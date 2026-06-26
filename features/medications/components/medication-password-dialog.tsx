@@ -36,11 +36,12 @@ export function MedicationPasswordDialog({
 }: MedicationPasswordDialogProps) {
   const [password, setPassword] = useState("")
 
-  useEffect(() => {
-    if (!open) {
+  function handleOpenChange(newOpen: boolean) {
+    if (!newOpen) {
       setPassword("")
     }
-  }, [open])
+    onOpenChange?.(newOpen)
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -51,7 +52,7 @@ export function MedicationPasswordDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="rounded-3xl sm:max-w-md">
         <DialogHeader>
           <div className="mb-2 flex size-11 items-center justify-center rounded-2xl border bg-slate-50 text-slate-700 dark:bg-slate-950 dark:text-slate-200">

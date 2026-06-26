@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { getDashboardSummary } from "@/server/queries/user-queries"
+import { getDashboardSummary } from "@/features/dashboard/queries/dashboard-queries"
 import { APP_CONFIG } from "@/constants"
 
 export default async function DashboardPage() {
