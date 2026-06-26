@@ -9,8 +9,6 @@ import {
   LayoutDashboard,
   Pill,
   Settings,
-  ShieldCheck,
-  Sparkles,
   UserCircle,
   Users,
   type LucideIcon,

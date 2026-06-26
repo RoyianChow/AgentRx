@@ -10,7 +10,6 @@ import {
   Loader2,
   LockKeyhole,
   Mail,
-  Pill,
   ShieldCheck,
 } from "lucide-react"
 import Image from "next/image"
@@ -26,7 +25,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { APP_CONFIG, APP_LIMITS, ROUTES } from "@/constants"
+import { APP_CONFIG, ROUTES } from "@/constants"
 type LoginFormState = {
   email: string
   password: string

@@ -11,7 +11,6 @@ import {
   LockKeyhole,
   Mail,
   MessageSquareText,
-  Pill,
   ShieldCheck,
   Sparkles,
   Stethoscope,

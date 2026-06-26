@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import {
   AlertTriangle,
   CheckCircle2,
@@ -105,10 +105,14 @@ export function MedicationsClient({
 }: MedicationsClientProps) {
   const [medications, setMedications] =
     useState<MedicationRow[]>(initialMedications)
+  const [prevInitialMedications, setPrevInitialMedications] =
+    useState<MedicationRow[]>(initialMedications)
 
-  useEffect(() => {
+  // If initialMedications changes from outside, reset the state.
+  if (initialMedications !== prevInitialMedications) {
+    setPrevInitialMedications(initialMedications)
     setMedications(initialMedications)
-  }, [initialMedications])
+  }
 
   const stats = useMemo(() => {
     return {
