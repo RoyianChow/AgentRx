@@ -42,6 +42,18 @@ function sanitizeRedirectPath(value: string | null) {
   if (!value) return ROUTES.DASHBOARD.ROOT
 
   // Prevent open redirects.
+  try {
+    if (typeof window !== "undefined") {
+      const url = new URL(value, window.location.origin)
+      if (url.origin !== window.location.origin) {
+        return ROUTES.DASHBOARD.ROOT
+      }
+    }
+  } catch {
+    // Fallback if URL parsing fails
+  }
+
+  // If it's a relative path, ensure it doesn't start with '//' (protocol-relative)
   if (!value.startsWith("/") || value.startsWith("//")) {
     return ROUTES.DASHBOARD.ROOT
   }
